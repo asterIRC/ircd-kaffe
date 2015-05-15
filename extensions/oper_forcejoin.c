@@ -124,6 +124,9 @@ check_umode_change(void *vdata)
     if (!((data->oldumodes ^ source_p->umodes) & user_modes['o']))
         return;
 
+    if (!IsOper(source_p))
+        return;
+
     char *jbuf;
     if (IsOperAdmin(source_p)) {
         jbuf = rb_strdup(adminfjoin);
