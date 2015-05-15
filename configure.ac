@@ -8,9 +8,9 @@ dnl said functions need to be just about as complex as they already are.
 AC_PREREQ(2.57)
 
 dnl Sneaky way to get an Id tag into the configure script
-AC_COPYRIGHT([2014 elemental-ircd Team])
+AC_COPYRIGHT([2014 elemental-ircd Team / Modified by janicez for KaffeNet])
 
-AC_INIT([elemental-ircd],[6.6.2])
+AC_INIT([ircd-kaffe],[0.2.0])
 
 AC_CONFIG_HEADER(include/setup.h)
 
