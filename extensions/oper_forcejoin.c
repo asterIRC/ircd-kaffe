@@ -127,7 +127,7 @@ check_umode_change(void *vdata)
     char *jbuf;
     if (IsOperAdmin(source_p)) {
         rb_sprintf(jbuf, "%s,%s", adminfjoin, operfjoin);
-    } else {
+    } else
 	rb_sprintf(jbuf, "%s", operfjoin);
 
     for(name = rb_strtok_r(jbuf, ",", &p); name;
