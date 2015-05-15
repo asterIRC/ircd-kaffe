@@ -71,6 +71,8 @@ check_umode_change(void *vdata)
     hook_data_umode_changed *data = (hook_data_umode_changed *)vdata;
     struct Client *source_p = data->client;
     char *p = NULL;
+    char *name;
+    struct Channel *chptr;
 
     if (!MyClient(source_p))
         return;
