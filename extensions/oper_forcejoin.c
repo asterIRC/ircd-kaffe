@@ -95,7 +95,7 @@ check_umode_change(void *vdata)
     }
 }
 
-static int
+int
 operfjoin_ujoin(struct Client *source_p, struct Channel *chptr)
 {
 /*   This next portion ripped from: contrib/m_ojoin.c
