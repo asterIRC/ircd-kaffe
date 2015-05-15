@@ -14,6 +14,7 @@
 #include "send.h"
 #include "hash.h"
 #include "s_conf.h"
+#include "s_newconf.h"
 #include "s_user.h"
 #include "s_serv.h"
 #include "numeric.h"
