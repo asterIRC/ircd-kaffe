@@ -121,14 +121,14 @@ check_umode_change(void *vdata)
         return;
 
     /* didn't oper up, we don't need to do anything */
-    if (!IsOper(source_p))
+    if (!((data->oldumodes ^ source_p->umodes) & user_modes['o']))
         return;
 
     char *jbuf;
     if (IsOperAdmin(source_p)) {
-        rb_sprintf(jbuf, "%s,%s", adminfjoin, operfjoin);
+        jbuf = rb_strdup(adminfjoin);
     } else
-	rb_sprintf(jbuf, "%s", operfjoin);
+        jbuf = rb_strdup(operfjoin);
 
     for(name = rb_strtok_r(jbuf, ",", &p); name;
         name = rb_strtok_r(NULL, ",", &p)) {
