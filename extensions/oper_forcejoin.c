@@ -56,7 +56,7 @@ _moddeinit(void)
 }
 
 static void check_umode_change(void *data);
-static void operfjoin_ujoin(struct Client *source_p, struct Channel *chptr);
+static int operfjoin_ujoin(struct Client *source_p, struct Channel *chptr);
 mapi_hfn_list_av1 oper_forcejoin_hfnlist[] = {
     { "umode_changed", (hookfn) check_umode_change },
     { NULL, NULL }
@@ -95,7 +95,7 @@ check_umode_change(void *vdata)
     }
 }
 
-static void
+static int
 operfjoin_ujoin(struct Client *source_p, struct Channel *chptr)
 {
 /*   This next portion ripped from: contrib/m_ojoin.c
@@ -134,4 +134,6 @@ operfjoin_ujoin(struct Client *source_p, struct Channel *chptr)
 
     source_p->localClient->last_join_time = rb_current_time();
     channel_member_names(chptr, source_p, 1);
+
+    return 0;
 }
