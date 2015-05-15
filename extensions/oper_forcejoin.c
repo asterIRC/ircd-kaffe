@@ -14,11 +14,11 @@
 #include "send.h"
 #include "hash.h"
 #include "s_conf.h"
-#include "s_newconf.h"
 #include "s_user.h"
 #include "s_serv.h"
 #include "numeric.h"
 #include "newconf.h"
+#include "s_newconf.h"
 
 char *operfjoin = "#opers";
 char *adminfjoin = "#services";
@@ -56,7 +56,7 @@ _moddeinit(void)
 }
 
 static void check_umode_change(void *data);
-static int operfjoin_ujoin(struct Client *source_p, struct Channel *chptr);
+int operfjoin_ujoin(struct Client *source_p, struct Channel *chptr);
 mapi_hfn_list_av1 oper_forcejoin_hfnlist[] = {
     { "umode_changed", (hookfn) check_umode_change },
     { NULL, NULL }
