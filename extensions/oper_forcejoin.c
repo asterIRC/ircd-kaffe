@@ -64,37 +64,6 @@ mapi_hfn_list_av1 oper_forcejoin_hfnlist[] = {
 
 DECLARE_MODULE_AV1(oper_forcejoin, _modinit, _moddeinit, NULL, NULL,
                    oper_forcejoin_hfnlist, "$Revision: 3526 $");
-
-static void
-check_umode_change(void *vdata)
-{
-    hook_data_umode_changed *data = (hook_data_umode_changed *)vdata;
-    struct Client *source_p = data->client;
-    char *p = NULL;
-    char *name;
-    struct Channel *chptr;
-
-    if (!MyClient(source_p))
-        return;
-
-    /* didn't oper up, we don't need to do anything */
-    if (!IsOper(source_p))
-        return;
-    char *jbuf;
-    if (IsOperAdmin(source_p)) {
-        rb_sprintf(jbuf, "%s,%s", adminfjoin, operfjoin);
-    } else {
-	rb_sprintf(jbuf, "%s", operfjoin);
-
-    for(name = rb_strtok_r(jbuf, ",", &p); name;
-        name = rb_strtok_r(NULL, ",", &p)) {
-        if ((chptr = find_channel(name))!=NULL)
-            operfjoin_ujoin(source_p, chptr);
-        else
-            user_join(source_p, source_p, name, NULL);
-    }
-}
-
 int
 operfjoin_ujoin(struct Client *source_p, struct Channel *chptr)
 {
@@ -137,3 +106,36 @@ operfjoin_ujoin(struct Client *source_p, struct Channel *chptr)
 
     return 0;
 }
+
+
+static void
+check_umode_change(void *vdata)
+{
+    hook_data_umode_changed *data = (hook_data_umode_changed *)vdata;
+    struct Client *source_p = data->client;
+    char *p = NULL;
+    char *name;
+    struct Channel *chptr;
+
+    if (!MyClient(source_p))
+        return;
+
+    /* didn't oper up, we don't need to do anything */
+    if (!IsOper(source_p))
+        return;
+
+    char *jbuf;
+    if (IsOperAdmin(source_p)) {
+        rb_sprintf(jbuf, "%s,%s", adminfjoin, operfjoin);
+    } else {
+	rb_sprintf(jbuf, "%s", operfjoin);
+
+    for(name = rb_strtok_r(jbuf, ",", &p); name;
+        name = rb_strtok_r(NULL, ",", &p)) {
+        if ((chptr = find_channel(name))!=NULL)
+            operfjoin_ujoin(source_p, chptr);
+        else
+            user_join(source_p, source_p, name, NULL);
+    }
+}
+
