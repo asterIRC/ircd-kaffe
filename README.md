@@ -1,7 +1,8 @@
 # ircd-kaffe
 
 ircd-kaffe is a fork of Elemental-IRCd to suit the needs of KaffeNet, which
-is an IRC network at `irc.kaffenet.tk`.
+is an IRC network at `irc.kaffenet.tk`. The official channel, on that network, is
+`#kaffenet-ircd`. Please direct all ircd-kaffe support questions there.
 
 # Elemental-IRCd
 

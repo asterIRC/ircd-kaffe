@@ -1,0 +1,3 @@
+# _modinit
+    add_conf_item("operjoin", "channels", CF_QSTRING, conf_set_ofjoinchans);
+
