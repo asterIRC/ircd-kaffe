@@ -108,6 +108,7 @@ extern const unsigned int CharAttrs[];
 #define MWILD_C  0x8000
 #define LET_C   0x10000 /* an actual letter */
 #define FCHAN_C 0x20000 /* a 'fake' channel char */
+#define NOSTART_C 0x40000 /* a 'fake' channel char */
 
 #define IsHostChar(c)   (CharAttrs[(unsigned char)(c)] & HOST_C)
 #define IsUserChar(c)   (CharAttrs[(unsigned char)(c)] & USER_C)
@@ -126,6 +127,7 @@ extern const unsigned int CharAttrs[];
 #define IsLower(c)      (IsAlpha((c)) && ((unsigned char)(c) > 0x5f))
 #define IsUpper(c)      (IsAlpha((c)) && ((unsigned char)(c) < 0x60))
 #define IsDigit(c)      (CharAttrs[(unsigned char)(c)] & DIGIT_C)
+#define IsNoStart(c)      (CharAttrs[(unsigned char)(c)] & NOSTART_C)
 #define IsXDigit(c) (IsDigit(c) || ('a' <= (c) && (c) <= 'f') || \
         ('A' <= (c) && (c) <= 'F'))
 #define IsAlNum(c) (CharAttrs[(unsigned char)(c)] & (DIGIT_C | ALPHA_C))

@@ -502,7 +502,7 @@ clean_nick(const char *nick, int loc_client)
     if(*nick == '-' || *nick == '\0')
         return 0;
 
-    if(loc_client && IsDigit(*nick))
+    if(loc_client && IsDigit(*nick) && IsNoStart(*nick))
         return 0;
 
     for(; *nick; nick++) {
