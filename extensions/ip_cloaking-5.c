@@ -72,6 +72,50 @@ DECLARE_MODULE_AV1(ip_cloaking, _modinit, _moddeinit, NULL, NULL,
                    ip_cloaking_hfnlist, "$Revision: 3526 $");
 
 static void
+do_ip_cloak6(const char *inbuf, char *outbuf)
+{
+    unsigned int a, b, c, d, e, f, g, h;
+    char buf[512];
+    sscanf(inbuf, "%x:%x:%x:%x:%x:%x:%x:%x", &a, &b, &c, &d, &e, &f, &g, &h);
+    rb_sprintf(buf, "%s", inbuf);
+    char *alpha = do_ip_cloak_part(buf);
+    rb_sprintf(buf, "%x:%x:%x:%x:%x:%x:%x", a, b, c, d, e, f, g);
+    char *beta = do_ip_cloak_part(buf);
+    rb_sprintf(buf, "%x:%x:%x:%x", a, b, c, d);
+    char *gamma = do_ip_cloak_part(buf);
+    rb_sprintf(outbuf, "%s:%s:%s:i6msk", alpha, beta, gamma);
+}
+
+static void
+do_ip_cloak(const char *inbuf, char *outbuf)
+{
+    unsigned int a, b, c, d;
+    char buf[512];
+    sscanf(inbuf, "%u.%u.%u.%u", &a, &b, &c, &d);
+    rb_sprintf(buf, "%s", inbuf);
+    char *alpha = do_ip_cloak_part(buf);
+    rb_sprintf(buf, "%u.%u.%u", a, b, c);
+    char *beta = do_ip_cloak_part(buf);
+    rb_sprintf(buf, "%u.%u", a, b);
+    char *gamma = do_ip_cloak_part(buf);
+    rb_sprintf(outbuf, "%s.%s.%s:i4msk", alpha, beta, gamma);
+}
+
+static void
+do_ip_cloak_part(const char *part)
+{
+    unsigned char *hash;
+    char *buf;
+    char *cloaked;
+    hash = HMAC(EVP_sha256(), secretsalt, strlen(secretsalt), (unsigned char*)part, strlen(part), NULL, NULL);
+    for (i = 0; i < 18; i = i + 3) {
+        sprintf(buf, "%.2X", hash[i]);
+        strcat(cloaked,buf);
+    }
+    return cloaked;
+}
+
+static void
 distribute_hostchange(struct Client *client_p, char *newhost)
 {
     if (newhost != client_p->orighost)
@@ -97,7 +141,7 @@ distribute_hostchange(struct Client *client_p, char *newhost)
 }
 
 static void
-do_host_cloak(const char *inbuf, char *outbuf)
+do_host_cloak_host(const char *inbuf, char *outbuf)
 {
     unsigned char *hash;
     char buf[3];
@@ -126,6 +170,39 @@ do_host_cloak(const char *inbuf, char *outbuf)
     rb_strlcpy(outbuf,cloakprefix,HOSTLEN+1);
     rb_strlcat(outbuf,output,HOSTLEN+1);
     rb_strlcat(outbuf,oldhost,HOSTLEN+1);
+}
+
+static void
+do_host_cloak_ip(const char *inbuf, char *outbuf)
+{
+    /* None of the characters in this table can be valid in an IP */
+    char chartable[] = "ghijklmnopqrstuvwxyz";
+    char *tptr;
+    char *accum = HMAC(EVP_sha256(), secretsalt, strlen(secretsalt), (unsigned char*)inbuf, strlen(inbuf), NULL, NULL);;
+    int sepcount = 0;
+    int totalcount = 0;
+    int ipv6 = 0;
+
+    if (strchr(inbuf, ':')) {
+        ipv6 = 1;
+
+        /* Damn you IPv6...
+         * We count the number of colons so we can calculate how much
+         * of the host to cloak. This is because some hostmasks may not
+         * have as many octets as we'd like.
+         *
+         * We have to do this ahead of time because doing this during
+         * the actual cloaking would get ugly
+         */
+        for (tptr = inbuf; *tptr != '\0'; tptr++)
+            if (*tptr == ':')
+                totalcount++;
+    } else if (!strchr(inbuf, '.'))
+        return;
+    if (ipv6)
+       do_ip_cloak6(inbuf, outbuf);
+    else
+       do_ip_cloak(inbuf, outbuf);
 }
 
 static void
@@ -169,7 +246,10 @@ check_new_user(void *vdata)
         return;
     }
     source_p->localClient->mangledhost = rb_malloc(HOSTLEN + 1);
-    do_host_cloak(source_p->orighost, source_p->localClient->mangledhost);
+    if (!irccmp(source_p->orighost, source_p->sockhost))
+        do_host_cloak_ip(source_p->orighost, source_p->localClient->mangledhost);
+    else
+        do_host_cloak_host(source_p->orighost, source_p->localClient->mangledhost);
     if (IsDynSpoof(source_p))
         source_p->umodes &= ~user_modes['x'];
     if (source_p->umodes & user_modes['x']) {
