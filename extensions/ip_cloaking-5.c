@@ -75,9 +75,9 @@ static char *
 do_ip_cloak_part(const char *part)
 {
     unsigned char *hash;
-    char *buf;
+    char *buf = "4";
     int i;
-    char *cloaked;
+    char *cloaked = "4";
     hash = HMAC(EVP_sha256(), secretsalt, strlen(secretsalt), (unsigned char*)part, strlen(part), NULL, NULL);
     for (i = 0; i < 18; i = i + 3) {
         sprintf(buf, "%.2X", hash[i]);
