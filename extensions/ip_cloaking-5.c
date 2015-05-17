@@ -87,21 +87,6 @@ do_ip_cloak_part(const char *part)
 }
 
 static void
-do_ip_cloak6(const char *inbuf, char *outbuf)
-{
-    unsigned int a, b, c, d, e, f, g, h;
-    char buf[512];
-    sscanf(inbuf, "%x:%x:%x:%x:%x:%x:%x:%x", &a, &b, &c, &d, &e, &f, &g, &h);
-    rb_sprintf(buf, "%s", inbuf);
-    char *alpha = do_ip_cloak_part(buf);
-    rb_sprintf(buf, "%x:%x:%x:%x:%x:%x:%x", a, b, c, d, e, f, g);
-    char *beta = do_ip_cloak_part(buf);
-    rb_sprintf(buf, "%x:%x:%x:%x", a, b, c, d);
-    char *gamma = do_ip_cloak_part(buf);
-    rb_sprintf(outbuf, "%s:%s:%s:i6msk", alpha, beta, gamma);
-}
-
-static void
 do_ip_cloak(const char *inbuf, char *outbuf)
 {
     unsigned int a, b, c, d;
@@ -147,7 +132,7 @@ do_host_cloak_host(const char *inbuf, char *outbuf)
     unsigned char *hash;
     char buf[3];
     char output[HOSTLEN+1];
-    int i;
+    int i, j;
 
     hash = HMAC(EVP_sha256(), secretsalt, strlen(secretsalt), (unsigned char*)inbuf, strlen(inbuf), NULL, NULL);
 
@@ -159,6 +144,7 @@ do_host_cloak_host(const char *inbuf, char *outbuf)
     }
 
     char *oldhost;
+    j = 0
     oldhost = rb_strdup(inbuf);
 
     for (i = 0; i < strlen(oldhost); i++) {
@@ -166,6 +152,10 @@ do_host_cloak_host(const char *inbuf, char *outbuf)
         if (*oldhost == '.') {
             break;
         }
+        if (*oldhost == ':') {
+            j++;
+        }
+        if (j == 4) break;
     }
 
     rb_strlcpy(outbuf,cloakprefix,HOSTLEN+1);
@@ -200,7 +190,7 @@ do_host_cloak_ip(const char *inbuf, char *outbuf)
     } else if (!strchr(inbuf, '.'))
         return;
     if (ipv6)
-       do_ip_cloak6(inbuf, outbuf);
+       do_host_cloak_host(inbuf, outbuf);
     else
        do_ip_cloak(inbuf, outbuf);
 }
