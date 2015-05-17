@@ -124,7 +124,7 @@ do_host_cloak(const char *inbuf, char *outbuf)
     }
 
     rb_strlcpy(outbuf,cloakprefix,HOSTLEN+1);
-    rb_strlcpy(outbuf,output,HOSTLEN+1);
+    rb_strlcat(outbuf,output,HOSTLEN+1);
     rb_strlcat(outbuf,oldhost,HOSTLEN+1);
 }
 
