@@ -100,12 +100,25 @@ do_host_cloak(const char *inbuf, char *outbuf)
 
     output[0]=0;
 
-    for (i = 0; i < 11; i++) {
-        sprintf(buf, "%.2x", hash[i]);
+    for (i = 0; i < 6; i++) {
+        sprintf(buf, "%.2X", hash[i]);
         strcat(output,buf);
     }
 
+    char *oldhost;
+    int isdotted = 0;
+    oldhost = rb_strdup(inbuf);
+
+    for (i = 0; i < strlen(oldhost); i++) {
+        oldhost++;
+        if (oldhost[i] == '.') {
+            isdotted = i;
+            break;
+        }
+    }
+
     rb_strlcpy(outbuf,output,HOSTLEN+1);
+    rb_strlcat(outbuf,oldhost,HOSTLEN+1);
 }
 
 static void
