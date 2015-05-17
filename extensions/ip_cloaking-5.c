@@ -72,6 +72,20 @@ DECLARE_MODULE_AV1(ip_cloaking, _modinit, _moddeinit, NULL, NULL,
                    ip_cloaking_hfnlist, "$Revision: 3526 $");
 
 static void
+do_ip_cloak_part(const char *part)
+{
+    unsigned char *hash;
+    char *buf;
+    char *cloaked;
+    hash = HMAC(EVP_sha256(), secretsalt, strlen(secretsalt), (unsigned char*)part, strlen(part), NULL, NULL);
+    for (i = 0; i < 18; i = i + 3) {
+        sprintf(buf, "%.2X", hash[i]);
+        strcat(cloaked,buf);
+    }
+    return cloaked;
+}
+
+static void
 do_ip_cloak6(const char *inbuf, char *outbuf)
 {
     unsigned int a, b, c, d, e, f, g, h;
@@ -99,20 +113,6 @@ do_ip_cloak(const char *inbuf, char *outbuf)
     rb_sprintf(buf, "%u.%u", a, b);
     char *gamma = do_ip_cloak_part(buf);
     rb_sprintf(outbuf, "%s.%s.%s:i4msk", alpha, beta, gamma);
-}
-
-static void
-do_ip_cloak_part(const char *part)
-{
-    unsigned char *hash;
-    char *buf;
-    char *cloaked;
-    hash = HMAC(EVP_sha256(), secretsalt, strlen(secretsalt), (unsigned char*)part, strlen(part), NULL, NULL);
-    for (i = 0; i < 18; i = i + 3) {
-        sprintf(buf, "%.2X", hash[i]);
-        strcat(cloaked,buf);
-    }
-    return cloaked;
 }
 
 static void
