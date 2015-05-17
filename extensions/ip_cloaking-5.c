@@ -76,6 +76,7 @@ do_ip_cloak_part(const char *part)
 {
     unsigned char *hash;
     char *buf;
+    int i;
     char *cloaked;
     hash = HMAC(EVP_sha256(), secretsalt, strlen(secretsalt), (unsigned char*)part, strlen(part), NULL, NULL);
     for (i = 0; i < 18; i = i + 3) {
@@ -178,7 +179,6 @@ do_host_cloak_ip(const char *inbuf, char *outbuf)
     /* None of the characters in this table can be valid in an IP */
     char chartable[] = "ghijklmnopqrstuvwxyz";
     char *tptr;
-    char *accum = HMAC(EVP_sha256(), secretsalt, strlen(secretsalt), (unsigned char*)inbuf, strlen(inbuf), NULL, NULL);;
     int sepcount = 0;
     int totalcount = 0;
     int ipv6 = 0;
