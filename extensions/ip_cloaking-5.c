@@ -144,7 +144,7 @@ do_host_cloak_host(const char *inbuf, char *outbuf)
     }
 
     char *oldhost;
-    j = 0
+    j = 0;
     oldhost = rb_strdup(inbuf);
 
     for (i = 0; i < strlen(oldhost); i++) {
