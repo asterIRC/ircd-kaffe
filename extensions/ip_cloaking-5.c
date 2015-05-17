@@ -152,10 +152,6 @@ do_host_cloak_host(const char *inbuf, char *outbuf)
         if (*oldhost == '.') {
             break;
         }
-        if (*oldhost == ':') {
-            j++;
-        }
-        if (j == 4) break;
     }
 
     rb_strlcpy(outbuf,cloakprefix,HOSTLEN+1);
