@@ -21,11 +21,18 @@
 #include "newconf.h"
 
 char *secretsalt = "32qwnqoWI@DpMd&w";
+char *cloakprefix = "net/";
 
 static void
 conf_set_secretsalt(void *data)
 {
     secretsalt = rb_strdup(data);
+}
+
+static void
+conf_set_cloakprefix(void *data)
+{
+    cloakprefix = rb_strdup(data);
 }
 
 static int
@@ -37,6 +44,7 @@ _modinit(void)
 
     add_top_conf("cloaking", NULL, NULL, NULL);
     add_conf_item("cloaking", "secretsalt", CF_QSTRING, conf_set_secretsalt);
+    add_conf_item("cloaking", "prefix", CF_QSTRING, conf_set_cloakprefix);
 
     return 0;
 }
@@ -100,23 +108,22 @@ do_host_cloak(const char *inbuf, char *outbuf)
 
     output[0]=0;
 
-    for (i = 0; i < 6; i++) {
+    for (i = 0; i < 11; i = i + 2) {
         sprintf(buf, "%.2X", hash[i]);
         strcat(output,buf);
     }
 
     char *oldhost;
-    int isdotted = 0;
     oldhost = rb_strdup(inbuf);
 
     for (i = 0; i < strlen(oldhost); i++) {
         oldhost++;
-        if (oldhost[i] == '.') {
-            isdotted = i;
+        if (*oldhost == '.') {
             break;
         }
     }
 
+    rb_strlcpy(outbuf,cloakprefix,HOSTLEN+1);
     rb_strlcpy(outbuf,output,HOSTLEN+1);
     rb_strlcat(outbuf,oldhost,HOSTLEN+1);
 }
