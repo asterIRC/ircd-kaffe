@@ -100,7 +100,7 @@ do_host_cloak(const char *inbuf, char *outbuf)
 
     output[0]=0;
 
-    for (i = 0; i < 32; i++) {
+    for (i = 0; i < 11; i++) {
         sprintf(buf, "%.2x", hash[i]);
         strcat(output,buf);
     }
@@ -121,7 +121,7 @@ check_umode_change(void *vdata)
     if (!((data->oldumodes ^ source_p->umodes) & user_modes['x']))
         return;
 
-    if (source_p->umodes & user_modes['h']) {
+    if (source_p->umodes & user_modes['x']) {
         if (IsIPSpoof(source_p) || source_p->localClient->mangledhost == NULL || (IsDynSpoof(source_p) && strcmp(source_p->host, source_p->localClient->mangledhost))) {
             source_p->umodes &= ~user_modes['x'];
             return;
