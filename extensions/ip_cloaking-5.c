@@ -79,7 +79,7 @@ do_ip_cloak_part(const char *part)
     int i;
     char cloaked[HOSTLEN+1];
     hash = HMAC(EVP_sha256(), secretsalt, strlen(secretsalt), (unsigned char*)part, strlen(part), NULL, NULL);
-    for (i = 0; i < 6; i++) {
+    for (i = 0; i < 4; i++) {
         rb_sprintf(buf, "%.2X", hash[i]);
         rb_strlcat(cloaked,buf,sizeof(cloaked));
     }
