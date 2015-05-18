@@ -90,14 +90,14 @@ static void
 do_ip_cloak(const char *inbuf, char *outbuf)
 {
     unsigned int a, b, c, d;
-    char buf[512], *alpha, *beta, *gamma;
+    char bufa[512], bufb[512], bufc[512], *alpha, *beta, *gamma;
     sscanf(inbuf, "%u.%u.%u.%u", &a, &b, &c, &d);
-    rb_sprintf(buf, "%s", inbuf);
-    alpha = do_ip_cloak_part(buf);
-    rb_sprintf(buf, "%u.%u.%u", a, b, c);
-    beta = do_ip_cloak_part(buf);
-    rb_sprintf(buf, "%u.%u", a, b);
-    gamma = do_ip_cloak_part(buf);
+    rb_sprintf(bufa, "%s", inbuf);
+    alpha = do_ip_cloak_part(bufa);
+    rb_sprintf(bufb, "%u.%u.%u", a, b, c);
+    beta = do_ip_cloak_part(bufb);
+    rb_sprintf(bufc, "%u.%u", a, b);
+    gamma = do_ip_cloak_part(bufc);
     rb_sprintf(outbuf, "%s.%s.%s:i4msk", alpha, beta, gamma);
 }
 
