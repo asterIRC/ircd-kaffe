@@ -79,7 +79,7 @@ do_ip_cloak_part(const char *part)
     int i;
     char cloaked[HOSTLEN+1];
     hash = HMAC(EVP_sha256(), secretsalt, strlen(secretsalt), (unsigned char*)part, strlen(part), NULL, NULL);
-    for (i = 0; i < 4; i++) {
+    for (i = 0; i < 8; i = i + 2) {
         rb_sprintf(buf, "%.2X", hash[i]);
         rb_strlcat(cloaked,buf,sizeof(cloaked));
     }
@@ -90,15 +90,15 @@ static void
 do_ip_cloak(const char *inbuf, char *outbuf)
 {
     unsigned int a, b, c, d;
-    char bufa[512], bufb[512], bufc[512], *alpha, *beta, *gamma;
+    char buf[512], *alpha, *beta, *gamma;
     sscanf(inbuf, "%u.%u.%u.%u", &a, &b, &c, &d);
-    rb_sprintf(bufa, "%s", inbuf);
-    alpha = do_ip_cloak_part(bufa);
-    rb_sprintf(bufb, "%u.%u.%u", a, b, c);
-    beta = do_ip_cloak_part(bufb);
-    rb_sprintf(bufc, "%u.%u", a, b);
-    gamma = do_ip_cloak_part(bufc);
-    rb_sprintf(outbuf, "%s.%s.%s:i4msk", alpha, beta, gamma);
+    rb_sprintf(buf, "%s", inbuf);
+    alpha = do_ip_cloak_part(buf);
+    rb_sprintf(buf, "%u.%u.%u", a, b, c);
+    beta = do_ip_cloak_part(buf);
+    rb_sprintf(buf, "%u.%u", a, b);
+    gamma = do_ip_cloak_part(buf);
+    rb_sprintf(outbuf, "%6s.%6s.%6s:i4msk", alpha, beta, gamma);
 }
 
 static void
