@@ -71,7 +71,7 @@ mapi_hfn_list_av1 ip_cloaking_hfnlist[] = {
 DECLARE_MODULE_AV1(ip_cloaking, _modinit, _moddeinit, NULL, NULL,
                    ip_cloaking_hfnlist, "$Revision: 3526 $");
 
-static char *
+static void
 do_ip_cloak_part(char *one, const char *part)
 {
     unsigned char *hash;
@@ -81,7 +81,7 @@ do_ip_cloak_part(char *one, const char *part)
     hash = HMAC(EVP_sha256(), secretsalt, strlen(secretsalt), (unsigned char*)part, strlen(part), NULL, NULL);
     for (i = 0; i < 12; i = i + 2) {
         rb_sprintf(buf, "%.2X", hash[i]);
-        rb_strcat(cloaked,buf);
+        strcat(cloaked,buf);
     }
     one = cloaked;
 }
