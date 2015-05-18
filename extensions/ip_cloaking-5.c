@@ -89,12 +89,14 @@ do_ip_cloak(const char *inbuf, char *outbuf)
     char buf[512], *alpha, *beta, *gamma;
     sscanf(inbuf, "%u.%u.%u.%u", &a, &b, &c, &d);
     rb_sprintf(buf, "%s", inbuf);
-    alpha = do_ip_cloak_part(buf);
+    rb_strlcat(outbuf,do_ip_cloak_part(buf),sizeof(outbuf));
+    rb_strlcat(outbuf,".",sizeof(outbuf));
     rb_sprintf(buf, "%u.%u.%u", a, b, c);
-    beta = do_ip_cloak_part(buf);
+    rb_strlcat(outbuf,do_ip_cloak_part(buf),sizeof(outbuf));
+    rb_strlcat(outbuf,".",sizeof(outbuf));
     rb_sprintf(buf, "%u.%u", a, b);
-    gamma = do_ip_cloak_part(buf);
-    rb_sprintf(outbuf, "%6s.%6s.%6s:i4msk", alpha, beta, gamma);
+    rb_strlcat(outbuf,do_ip_cloak_part(buf),sizeof(outbuf));
+    rb_strlcat(outbuf,":4msk",sizeof(outbuf));
 }
 
 static void
