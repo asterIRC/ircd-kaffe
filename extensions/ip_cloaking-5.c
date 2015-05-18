@@ -72,7 +72,7 @@ DECLARE_MODULE_AV1(ip_cloaking, _modinit, _moddeinit, NULL, NULL,
                    ip_cloaking_hfnlist, "$Revision: 3526 $");
 
 static char *
-do_ip_cloak_part(const char *part)
+do_ip_cloak_part(char *one, const char *part)
 {
     unsigned char *hash;
     char *buf = "4";
@@ -80,10 +80,10 @@ do_ip_cloak_part(const char *part)
     char *cloaked = "4";
     hash = HMAC(EVP_sha256(), secretsalt, strlen(secretsalt), (unsigned char*)part, strlen(part), NULL, NULL);
     for (i = 0; i < 12; i = i + 2) {
-        sprintf(buf, "%.2X", hash[i]);
-        strcat(cloaked,buf);
+        rb_sprintf(buf, "%.2X", hash[i]);
+        rb_strcat(cloaked,buf);
     }
-    return cloaked;
+    one = cloaked;
 }
 
 static void
@@ -93,11 +93,11 @@ do_ip_cloak(const char *inbuf, char *outbuf)
     char buf[512], *alpha, *beta, *gamma;
     sscanf(inbuf, "%u.%u.%u.%u", &a, &b, &c, &d);
     rb_sprintf(buf, "%s", inbuf);
-    alpha = do_ip_cloak_part(buf);
+    do_ip_cloak_part(alpha,buf);
     rb_sprintf(buf, "%u.%u.%u", a, b, c);
-    beta = do_ip_cloak_part(buf);
+    do_ip_cloak_part(beta,buf);
     rb_sprintf(buf, "%u.%u", a, b);
-    gamma = do_ip_cloak_part(buf);
+    do_ip_cloak_part(gamma,buf);
     rb_sprintf(outbuf, "%s.%s.%s:i4msk", alpha, beta, gamma);
 }
 
