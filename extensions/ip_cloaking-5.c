@@ -94,7 +94,7 @@ do_ip_cloak(const char *inbuf, char *outbuf)
     beta = do_ip_cloak_part(buf);
     rb_sprintf(buf, "%u.%u", a, b);
     gamma = do_ip_cloak_part(buf);
-    rb_sprintf(outbuf, "%6s.%6s.%6s:i4msk", alpha, beta+8, gamma+16);
+    rb_sprintf(outbuf, "%6s.%6s.%6s:i4msk", alpha, beta, gamma);
 }
 
 static void
