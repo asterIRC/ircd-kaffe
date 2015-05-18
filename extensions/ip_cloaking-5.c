@@ -80,7 +80,6 @@ do_ip_cloak_part(const char *part)
     char cloaked[HOSTLEN+1];
     hash = HMAC(EVP_sha256(), secretsalt, strlen(secretsalt), (unsigned char*)part, strlen(part), NULL, NULL);
     for (i = 0; i < 6; i++) {
-        sendto_realops_snomask_from(SNO_GENERAL, L_ALL, &me, "Attempting to cloak %s %.2X", part, hash[i]);
         rb_sprintf(buf, "%.2X", hash[i]);
         rb_strlcat(cloaked,buf,sizeof(cloaked));
     }
@@ -94,13 +93,10 @@ do_ip_cloak(const char *inbuf, char *outbuf)
     char buf[512], *alpha, *beta, *gamma;
     sscanf(inbuf, "%u.%u.%u.%u", &a, &b, &c, &d);
     rb_sprintf(buf, "%s", inbuf);
-    sendto_realops_snomask_from(SNO_GENERAL, L_ALL, &me, "Attempting to cloak %s %s", inbuf, buf);
     alpha = do_ip_cloak_part(buf);
     rb_sprintf(buf, "%u.%u.%u", a, b, c);
-    sendto_realops_snomask_from(SNO_GENERAL, L_ALL, &me, "Attempting to cloak %s %s", inbuf, buf);
     beta = do_ip_cloak_part(buf);
     rb_sprintf(buf, "%u.%u", a, b);
-    sendto_realops_snomask_from(SNO_GENERAL, L_ALL, &me, "Attempting to cloak %s %s", inbuf, buf);
     gamma = do_ip_cloak_part(buf);
     rb_sprintf(outbuf, "%s.%s.%s:i4msk", alpha, beta, gamma);
 }
