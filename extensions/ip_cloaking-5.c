@@ -75,10 +75,10 @@ static char *
 do_ip_cloak_part(const char *part)
 {
     unsigned char *hash;
-    char buf[512] = "";
+    char buf[32] = "";
     int i;
     hash = HMAC(EVP_sha256(), secretsalt, strlen(secretsalt), (unsigned char*)part, strlen(part), NULL, NULL);
-    rb_sprintf(buf, "%.2X%.2X%.2X%.2X", hash[2], hash[4], hash[6], hash[8]);
+    rb_snprintf(buf, sizeof(buf), "%.2X%.2X%.2X%.2X", hash[2], hash[4], hash[6], hash[8]);
     return buf;
 }
 
