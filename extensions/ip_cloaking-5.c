@@ -82,9 +82,8 @@ do_ip_cloak_part(char *one, const char *part)
     for (i = 0; i < 6; i++) {
         sendto_realops_snomask_from(SNO_GENERAL, L_ALL, &me, "Attempting to cloak %s %.2X", part, hash[i]);
         rb_sprintf(buf, "%.2X", hash[i]);
-        strcat(cloaked,buf);
+        rb_strlcat(one,buf,sizeof(one));
     }
-    one = cloaked;
 }
 
 static void
