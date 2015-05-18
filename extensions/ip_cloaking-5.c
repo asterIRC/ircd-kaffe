@@ -95,13 +95,13 @@ do_ip_cloak(const char *inbuf, char *outbuf)
     sscanf(inbuf, "%u.%u.%u.%u", &a, &b, &c, &d);
     rb_sprintf(buf, "%s", inbuf);
     sendto_realops_snomask_from(SNO_GENERAL, L_ALL, &me, "Attempting to cloak %s %s", inbuf, buf);
-    do_ip_cloak_part(alpha,buf);
+    alpha = do_ip_cloak_part(buf);
     rb_sprintf(buf, "%u.%u.%u", a, b, c);
     sendto_realops_snomask_from(SNO_GENERAL, L_ALL, &me, "Attempting to cloak %s %s", inbuf, buf);
-    do_ip_cloak_part(beta,buf);
+    beta = do_ip_cloak_part(buf);
     rb_sprintf(buf, "%u.%u", a, b);
     sendto_realops_snomask_from(SNO_GENERAL, L_ALL, &me, "Attempting to cloak %s %s", inbuf, buf);
-    do_ip_cloak_part(gamma,buf);
+    gamma = do_ip_cloak_part(buf);
     rb_sprintf(outbuf, "%s.%s.%s:i4msk", alpha, beta, gamma);
 }
 
