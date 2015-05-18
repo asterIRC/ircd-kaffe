@@ -72,18 +72,19 @@ DECLARE_MODULE_AV1(ip_cloaking, _modinit, _moddeinit, NULL, NULL,
                    ip_cloaking_hfnlist, "$Revision: 3526 $");
 
 static void
-do_ip_cloak_part(char *one, const char *part)
+do_ip_cloak_part(const char *part)
 {
     unsigned char *hash;
     char buf[512];
     int i;
-    char *cloaked;
+    char cloaked[HOSTLEN+1];
     hash = HMAC(EVP_sha256(), secretsalt, strlen(secretsalt), (unsigned char*)part, strlen(part), NULL, NULL);
     for (i = 0; i < 6; i++) {
         sendto_realops_snomask_from(SNO_GENERAL, L_ALL, &me, "Attempting to cloak %s %.2X", part, hash[i]);
         rb_sprintf(buf, "%.2X", hash[i]);
-        rb_strlcat(one,buf,sizeof(one));
+        rb_strlcat(cloaked,buf,sizeof(cloaked));
     }
+    return rb_strdup(cloaked);
 }
 
 static void
