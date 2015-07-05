@@ -114,5 +114,6 @@
 
 #define CONFIG_RATBOX_LEVEL_2
 
+#define UNICODE_NICKS
 #include "defaults.h"
 #endif /* INCLUDED_config_h */

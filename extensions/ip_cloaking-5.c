@@ -58,6 +58,7 @@ _moddeinit(void)
 
     add_top_conf("cloaking", NULL, NULL, NULL);
     add_conf_item("cloaking", "secretsalt", CF_QSTRING, conf_set_secretsalt);
+    add_conf_item("cloaking", "prefix", CF_QSTRING, conf_set_cloakprefix);
 }
 
 static void check_umode_change(void *data);
@@ -79,19 +80,76 @@ do_ip_cloak_part(const char *part)
     int i;
     hash = HMAC(EVP_sha256(), secretsalt, strlen(secretsalt), (unsigned char*)part, strlen(part), NULL, NULL);
     rb_snprintf(buf, sizeof(buf), "%.2X%.2X%.2X%.2X", hash[2], hash[4], hash[6], hash[8]);
-    return buf;
+    return rb_strdup(buf);
 }
 
 static void
 do_ip_cloak(const char *inbuf, char *outbuf)
 {
     unsigned int a, b, c, d;
+    struct in_addr in_addr;
     char buf[512], *alpha, *beta, *gamma;
-    sscanf(inbuf, "%u.%u.%u.%u", &a, &b, &c, &d);
+    alpha = rb_malloc(512);
+    beta = rb_malloc(512);
+    gamma = rb_malloc(512);
+    rb_inet_pton(AF_INET, inbuf, &in_addr);
+    a = (in_addr.s_addr & 0xff000000) >> 24;
+    b = (in_addr.s_addr & 0x00ff0000) >> 16;
+    c = (in_addr.s_addr & 0x0000ff00) >> 8;
+    d = in_addr.s_addr & 0x000000ff;
     rb_sprintf(alpha, "%s", inbuf);
     rb_sprintf(beta, "%u.%u.%u", a, b, c);
     rb_sprintf(gamma, "%u.%u", a, b);
-    rb_sprintf(outbuf, "%s.%s.%s:i4msk", do_ip_cloak_part(alpha), do_ip_cloak_part(beta), do_ip_cloak_part(gamma));
+    rb_sprintf(outbuf, "%s.%s.%s.i4msk", do_ip_cloak_part(alpha), do_ip_cloak_part(beta), do_ip_cloak_part(gamma));
+}
+
+static void
+do_host_cloak_ipv6(const char *inbuf, char *outbuf)
+{
+    unsigned char *a, *b, *c, *d;
+    char buf[512], *alpha, *beta, *gamma;
+    struct in6_addr in_addr;
+    a = rb_malloc(512);
+    b = rb_malloc(512);
+    c = rb_malloc(512);
+    alpha = rb_malloc(512);
+    beta = rb_malloc(512);
+    gamma = rb_malloc(512);
+    rb_inet_pton(AF_INET6, inbuf, &in_addr);
+    rb_sprintf(c, "%2x%2x.%2x%2x.%2x%2x.%2x%2x.%2x%2x.%2x%2x",
+		in_addr.s6_addr[0],
+		in_addr.s6_addr[1],
+		in_addr.s6_addr[2],
+		in_addr.s6_addr[3],
+		in_addr.s6_addr[4],
+		in_addr.s6_addr[5],
+		in_addr.s6_addr[6],
+		in_addr.s6_addr[7],
+		in_addr.s6_addr[8],
+		in_addr.s6_addr[9],
+		in_addr.s6_addr[10],
+		in_addr.s6_addr[11]
+	);
+    rb_sprintf(b, "%2x%2x.%2x%2x.%2x%2x.%2x%2x",
+		in_addr.s6_addr[0],
+		in_addr.s6_addr[1],
+		in_addr.s6_addr[2],
+		in_addr.s6_addr[3],
+		in_addr.s6_addr[4],
+		in_addr.s6_addr[5],
+		in_addr.s6_addr[6],
+		in_addr.s6_addr[7]
+	);
+    rb_sprintf(a, "%2x%2x.%2x%2x",
+		in_addr.s6_addr[0],
+		in_addr.s6_addr[1],
+		in_addr.s6_addr[2],
+		in_addr.s6_addr[3]
+	);
+    rb_sprintf(alpha, "%s", inbuf);
+    rb_sprintf(beta, "%s.%s.%s", a, b, c);
+    rb_sprintf(gamma, "%s.%s", a, b);
+    rb_sprintf(outbuf, "%s:%s:%s:i6msk", do_ip_cloak_part(alpha), do_ip_cloak_part(beta), do_ip_cloak_part(gamma));
 }
 
 static void
@@ -179,7 +237,7 @@ do_host_cloak_ip(const char *inbuf, char *outbuf)
     } else if (!strchr(inbuf, '.'))
         return;
     if (ipv6)
-       do_host_cloak_host(inbuf, outbuf);
+       do_host_cloak_ipv6(inbuf, outbuf);
     else
        do_ip_cloak(inbuf, outbuf);
 }
