@@ -737,6 +737,7 @@ set_default_conf(void)
     ConfigFileEntry.oper_snomask = SNO_GENERAL;
 
     ConfigChannel.autochanmodes = rb_strdup("nt");
+    ConfigChannel.autotopic = rb_strdup("");
     ConfigChannel.exemptchanops = rb_strdup("");
     ConfigChannel.disabledmodes = rb_strdup("");
     ConfigChannel.admin_on_channel_create = NO;

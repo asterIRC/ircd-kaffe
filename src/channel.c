@@ -1905,6 +1905,20 @@ void user_join(struct Client * client_p, struct Client * source_p, const char * 
                           ":%s SJOIN %ld %s %s :@%s",
                           me.id, (long) chptr->channelts,
                           chptr->chname, modes, source_p->id);
+
+           // This next addition was a challenge by TwinUsers.
+           if (strlen(ConfigChannel.autotopic)!=0 && strlen(ConfigChannel.autotopic)<=TOPICLEN) {
+               set_channel_topic(chptr, ConfigChannel.autotopic, me.name, rb_current_time());
+               sendto_server(client_p, chptr, CAP_TS6|CAP_EOPMOD, NOCAPS, ":%s ETB %ld %s %ld %s :%s",
+                             me.id, (long)chptr->channelts, chptr->chname, (long)chptr->topic_time, me.name,
+                             chptr->topic);
+               sendto_server(client_p, chptr, CAP_TS6|CAP_TB, CAP_EOPMOD, ":%s TB %s %ld %s :%s",
+                             me.id, chptr->chname, (long)chptr->topic_time, me.name,
+                             chptr->topic);
+               // XXX - Due to automatic topic on channel create, should we deprecate non-TB/EOPMOD servers?
+               sendto_server(client_p, chptr, CAP_TS6, CAP_TB|CAP_EOPMOD, ":%s TOPIC %s :%s",
+                             use_id(source_p), chptr->chname, chptr->topic);
+           }
         } else {
             sendto_server(client_p, chptr, CAP_TS6, NOCAPS,
                           ":%s JOIN %ld %s +",

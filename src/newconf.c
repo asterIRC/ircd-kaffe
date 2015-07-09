@@ -2207,6 +2207,7 @@ static struct ConfEntry conf_general_table[] = {
 
 static struct ConfEntry conf_channel_table[] = {
     { "autochanmodes",	CF_QSTRING, NULL, 0, &ConfigChannel.autochanmodes	},
+    { "autotopic",	CF_QSTRING, NULL, 0, &ConfigChannel.autotopic		},
     { "exemptchanops",	CF_QSTRING, NULL, 0, &ConfigChannel.exemptchanops	},
     { "disabledmodes",	CF_QSTRING, NULL, 0, &ConfigChannel.disabledmodes	},
     { "default_split_user_count",	CF_INT,  NULL, 0, &ConfigChannel.default_split_user_count	 },

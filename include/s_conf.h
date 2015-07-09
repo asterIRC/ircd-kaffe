@@ -234,6 +234,7 @@ struct config_file_entry {
 
 struct config_channel_entry {
     char * autochanmodes;
+    char * autotopic;
     char * exemptchanops;
     char * disabledmodes;
     int admin_on_channel_create;
