@@ -68,7 +68,7 @@ int user_modes[256] = {
     0,			/* @ */
     0,			/* A */
     UMODE_BOT,		/* B */
-    UMODE_NOCTCP,		/* C */
+    UMODE_NOCTCP,	/* C */
     UMODE_DEAF,		/* D */
     0,			/* E */
     0,			/* F */
@@ -84,41 +84,41 @@ int user_modes[256] = {
     0,			/* P */
     UMODE_NOFORWARD,	/* Q */
     UMODE_REGONLYMSG,	/* R */
-    UMODE_SERVICE,		/* S */
+    UMODE_SERVICE,	/* S */
     0,			/* T */
     0,			/* U */
-    UMODE_NOINVITE,		/* V */
+    UMODE_NOINVITE,	/* V */
     UMODE_WEBCLIENT,	/* W */
     0,			/* X */
     0,			/* Y */
     UMODE_SSLCLIENT,	/* Z */
     /* 0x5B */ 0, 0, 0, 0, 0, 0, /* 0x60 */
-    UMODE_ADMIN,		/* a */
+    UMODE_ADMIN,	/* a */
     0,			/* b */
     0,			/* c */
     0,			/* d */
     0,			/* e */
     0,			/* f */
-    UMODE_CALLERID,		/* g */
+    UMODE_CALLERID,	/* g */
     0,			/* h */
     UMODE_INVISIBLE,	/* i */
     0,			/* j */
     0,			/* k */
-    UMODE_LOCOPS,		/* l */
+    UMODE_LOCOPS,	/* l */
     0,			/* m */
-    0,			/* n */
+    UMODE_SSLONLYMSG,	/* n */
     UMODE_OPER,		/* o */
-    UMODE_OVERRIDE,		/* p */
+    UMODE_OVERRIDE,	/* p */
     0,			/* q */
     0,			/* r */
     UMODE_SERVNOTICE,	/* s */
     0,			/* t */
     0,			/* u */
     0,			/* v */
-    UMODE_WALLOP,		/* w */
+    UMODE_WALLOP,	/* w */
     0,			/* x */
     0,			/* y */
-    UMODE_OPERWALL,		/* z */
+    UMODE_OPERWALL,	/* z */
     /* 0x7B */ 0, 0, 0, 0, 0, /* 0x7F */
     /* 0x80 */ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, /* 0x9F */
     /* 0x90 */ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, /* 0x9F */

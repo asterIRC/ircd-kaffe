@@ -420,6 +420,7 @@ struct ListClient {
 #define UMODE_BOT	   0x8000	/* mark as a bot in whois */
 #define UMODE_SCALLERID    0x40000	/* soft caller id */
 #define UMODE_HIDECHANS    0x80000	/* hide channels in whois */
+#define UMODE_SSLONLYMSG   0x200000     /* only allow users using SSL to msg */
 
 /* user information flags, only settable by remote mode or local oper */
 #define UMODE_OPER         0x1000	/* Operator */
@@ -520,6 +521,7 @@ struct ListClient {
 #define IsDeaf(x)		((x)->umodes & UMODE_DEAF)
 #define IsNoForward(x)		((x)->umodes & UMODE_NOFORWARD)
 #define IsSetRegOnlyMsg(x)	((x)->umodes & UMODE_REGONLYMSG)
+#define IsSetSslOnlyMsg(x)	((x)->umodes & UMODE_SSLONLYMSG)
 #define IsSetNoCTCP(x)		((x)->umodes & UMODE_NOCTCP)
 #define IsSetNoInvite(x)	((x)->umodes & UMODE_NOINVITE)
 #define IsSetBot(x)		((x)->umodes & UMODE_BOT)

@@ -86,7 +86,7 @@ operfjoin_ujoin(struct Client *source_p, struct Channel *chptr)
  *   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
  */
-    if (IsMember(source_p, chptr)) return; //Nothing to do here -- janicez
+    if (IsMember(source_p, chptr)) return 0; //Nothing to do here -- janicez
     add_user_to_channel(chptr, source_p, CHFL_PEON);
     sendto_server(source_p, chptr, CAP_TS6, NOCAPS,
                   ":%s JOIN %ld %s +",
