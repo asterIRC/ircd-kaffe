@@ -8,6 +8,8 @@ User modes: (? designates that the umode is provided by an extension
          +o     - Designates that this client is an IRC Operator.
                   Use the /oper command to attain this.
          +i     - Designates this client 'invisible'.
+         +t     - Prevents non-SSL users you have not accepted from
+                  messaging you.
          +g     - "caller id" mode only allow accept clients to message you
          +w     - Can see oper wallops.
        ? +x     - Has a cloaked host.
